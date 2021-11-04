@@ -11,16 +11,23 @@ fs.writeFile(
 );
 
 stdout.write('Напишите ваше сообщение\n');
-stdin.on('data', data => {
-    
-            fs.appendFile(
+stdin.on('data', data => { 
+        if (data.toString().slice(0, -2) === 'exit'){
+            process.exit()
+        }   
+        fs.appendFile(
         path.join(__dirname,  'mynotes.txt'),
-        data,        
+        data, 
         err => {
             if (err) throw err;
         }      
-    );   
+    );  
 }
-);
+)
 
-process.on('exit', () => stdout.write('Файл сохранен'));
+function handle() {
+   process.exit()
+}
+
+process.on('SIGINT', handle)
+process.on('exit', () => stdout.write('До свидания\n'));
